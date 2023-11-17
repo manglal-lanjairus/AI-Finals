@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Collide
   - Team1
+  - Team2
+  - Arrow
+  - Dead
   layers:
   - Default
   - TransparentFX

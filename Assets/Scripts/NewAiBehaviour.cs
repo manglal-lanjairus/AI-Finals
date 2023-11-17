@@ -27,18 +27,21 @@ public class NewAiBehaviour : MonoBehaviour
     public List<GameObject> aiModel;
     public Animator animator;
     public NavMeshAgent agent;
+    public CapsuleCollider capCollider;
     [Header("AttackRange")]
     public float range;
     [Header("EnemyValues")]
     public float health;
     public float damage;
     public new string tag = "Team1";
+    public bool isDead;
     [Header("VFX")]
     public GameObject Arrow;
     public Transform spawnArcherFX;
     // Start is called before the first frame update
     void Start()
     {
+        capCollider = GetComponent<CapsuleCollider>();
         agent = GetComponent<NavMeshAgent>();
         Action<AI_Types> activateAiModel = (AI_Types aiType) => 
         {
@@ -52,10 +55,13 @@ public class NewAiBehaviour : MonoBehaviour
             case AI_Types.Archer:
                 health = GameManager.Instance.archerHealth;
                 range = GameManager.Instance.archerRange;
+                damage = GameManager.Instance.archerDamage;
                 break;
             case AI_Types.Warrior:
                 break;
             case AI_Types.Mage:
+                health = GameManager.Instance.mageHealth;
+                range = GameManager.Instance.mageRange;
                 break;
             case AI_Types.Ninja:
                 health = GameManager.Instance.ninjaHealth;
@@ -97,6 +103,28 @@ public class NewAiBehaviour : MonoBehaviour
         AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(layer);
         return anim.GetCurrentAnimatorClipInfo(layer)[0].clip;
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Arrow"))
+        {
+            damage = GameManager.Instance.archerDamage;
+            float archerDmg = damage;
+            Destroy(other.gameObject);
+            if(!(health <= 0))
+            {
+                Debug.Log(tag + " Hit with " + archerDmg + " damage");
+                health = health - archerDmg;
+            }
+            else
+            {
+                agent.speed = 0;
+                animator.SetBool("isAttacking", false);
+                animator.SetTrigger("isDead");
+                capCollider.enabled = false;
+                isDead = true;
+                Destroy(this.gameObject, 1.5f);
+            }
+        }
+    }
 
-   
 }

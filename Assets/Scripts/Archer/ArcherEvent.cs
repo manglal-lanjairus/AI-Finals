@@ -19,7 +19,6 @@ public class ArcherEvent : MonoBehaviour
     }
     public void ShootArrow()
     {
-
         GameObject arrowFX = Instantiate(newAiBehaviour.Arrow, newAiBehaviour.spawnArcherFX.position, newAiBehaviour.spawnArcherFX.rotation);
         Rigidbody bulletRigidbody = arrowFX.AddComponent<Rigidbody>();
         bulletRigidbody.AddForce(transform.forward * speed, ForceMode.Impulse);

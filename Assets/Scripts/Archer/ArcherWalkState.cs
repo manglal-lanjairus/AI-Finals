@@ -21,7 +21,7 @@ public class ArcherWalkState : StateMachineBehaviour
         {
             // Check if the GameObject is within the radius
             float distance = Vector3.Distance(aiBehaviour.agent.transform.position, nearestGameObject.transform.position);
-            if (distance <= aiBehaviour.range)
+            if (distance <= aiBehaviour.range && !aiBehaviour.isDead)
             {
                 aiBehaviour.agent.speed = 0;
                 animator.SetBool("isWalking", false);

@@ -1,23 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Threading.Tasks;
-public class ArcherIdleState : StateMachineBehaviour
+
+public class ArcherAttackState : StateMachineBehaviour
 {
+    NewAiBehaviour aiBehaviour;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
-    override public async void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        #region will walk after 5 seconds
-        await Task.Delay(5000);
-        animator.SetBool("isWalking", true);
-        #endregion
+        aiBehaviour = animator.GetComponentInParent<NewAiBehaviour>();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
-    //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
-    //}
+    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        GameObject nearestGameObject = GameObject.FindWithTag(aiBehaviour.tag);
+        if (nearestGameObject != null)
+        {
+            // Check if the GameObject is within the radius
+            float distance = Vector3.Distance(aiBehaviour.agent.transform.position, nearestGameObject.transform.position);
+            if (distance >= aiBehaviour.range && !aiBehaviour.isDead)
+            {
+                animator.SetBool("isWalking", true);
+                animator.SetBool("isAttacking", false);
+                aiBehaviour.agent.speed = 3.5f;
+            }
+        }
+    }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
