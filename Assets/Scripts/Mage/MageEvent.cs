@@ -20,7 +20,7 @@ public class MageEvent : MonoBehaviour
     public void ShootFireball()
     {
         GameObject arrowFX = Instantiate(newAiBehaviour.fireball, newAiBehaviour.spawnMageFX.position, newAiBehaviour.spawnMageFX.rotation);
-        Rigidbody bulletRigidbody = arrowFX.AddComponent<Rigidbody>();
+        Rigidbody bulletRigidbody = arrowFX.GetComponent<Rigidbody>();
         bulletRigidbody.AddForce(transform.forward * speed, ForceMode.Impulse);
     }
 }
