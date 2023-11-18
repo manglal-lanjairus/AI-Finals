@@ -37,7 +37,9 @@ public class NewAiBehaviour : MonoBehaviour
     public bool isDead;
     [Header("VFX")]
     public GameObject Arrow;
+    public GameObject fireball;
     public Transform spawnArcherFX;
+    public Transform spawnMageFX;
     // Start is called before the first frame update
     void Start()
     {
@@ -110,21 +112,33 @@ public class NewAiBehaviour : MonoBehaviour
             damage = GameManager.Instance.archerDamage;
             float archerDmg = damage;
             Destroy(other.gameObject);
-            if(!(health <= 0))
-            {
-                Debug.Log(tag + " Hit with " + archerDmg + " damage");
-                health = health - archerDmg;
-            }
-            else
-            {
-                agent.speed = 0;
-                animator.SetBool("isAttacking", false);
-                animator.SetTrigger("isDead");
-                capCollider.enabled = false;
-                isDead = true;
-                Destroy(this.gameObject, 1.5f);
-            }
+            isEnemyAliveOrNo(archerDmg);
         }
+        else if (other.gameObject.CompareTag("Fireball"))
+        {
+            damage = GameManager.Instance.mageDamage;
+            float mageDmg = damage;
+            Destroy(other.gameObject);
+            isEnemyAliveOrNo(mageDmg);
+        }
+        
     }
-
+    public float isEnemyAliveOrNo(float damage)
+    {
+        if (!(health <= 0))
+        {
+            health = health - damage;
+            Debug.Log(aiTypes + " is hit with " + damage + " damage. Health remaining: " + health);
+        }
+        else
+        {
+            agent.speed = 0;
+            animator.SetBool("isAttacking", false);
+            animator.SetTrigger("isDead");
+            capCollider.enabled = false;
+            isDead = true;
+            Destroy(this.gameObject, 2);
+        }
+        return 0;
+    }
 }
