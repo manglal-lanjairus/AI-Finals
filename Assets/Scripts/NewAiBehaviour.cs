@@ -36,9 +36,14 @@ public class NewAiBehaviour : MonoBehaviour
     public new string tag = "Team1";
     public bool isDead;
     [Header("VFX")]
+    [Header("Archer")]
     public GameObject Arrow;
-    public GameObject fireball;
     public Transform spawnArcherFX;
+    [Header("Warrior")]
+    public GameObject slash;
+    public Transform spawnWarriorFX;
+    [Header("Mage")]
+    public GameObject fireball;
     public Transform spawnMageFX;
     // Start is called before the first frame update
     void Start()
@@ -60,14 +65,12 @@ public class NewAiBehaviour : MonoBehaviour
                 damage = GameManager.Instance.archerDamage;
                 break;
             case AI_Types.Warrior:
+                health = GameManager.Instance.warriorHealth;
+                range = GameManager.Instance.meleeRange;
                 break;
             case AI_Types.Mage:
                 health = GameManager.Instance.mageHealth;
                 range = GameManager.Instance.mageRange;
-                break;
-            case AI_Types.Ninja:
-                health = GameManager.Instance.ninjaHealth;
-                range = GameManager.Instance.ninjaRange;
                 break;
             default:
                 break;
@@ -113,6 +116,13 @@ public class NewAiBehaviour : MonoBehaviour
             float archerDmg = damage;
             Destroy(other.gameObject);
             isEnemyAliveOrNo(archerDmg);
+        }
+        else if (other.gameObject.CompareTag("Sword"))
+        {
+            damage = GameManager.Instance.warriorDamage;
+            float warriorDmg = damage;
+            Debug.Log("sword hit");
+            isEnemyAliveOrNo(warriorDmg);
         }
         else if (other.gameObject.CompareTag("Fireball"))
         {
